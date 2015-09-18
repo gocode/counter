@@ -17,27 +17,34 @@
 	</style>
 
 	<template>
-		<paper-card heading="Counter1">
-			<div class="card-content">
-				<div>
-					Counter Description
+		<template is="dom-repeat" items="[[Counters]]">
+			<paper-card heading="[[item.Heading]]">
+				<div class="card-content">
+					<div>[[item.Desc]]</div>
+					<div class="counter">[[item.Count]]</div>
 				</div>
-				<div class="counter">[[count]]</div>
-			</div>
-			<div class="card-actions">
-				<paper-icon-button icon="add" on-click="increment"></paper-icon-button>
-				<paper-icon-button icon="remove" on-click="decrement"></paper-icon-button>
-			</div>
-		</paper-card>
+				<div class="card-actions">
+					<paper-icon-button icon="add" on-click="increment"></paper-icon-button>
+					<paper-icon-button icon="remove" on-click="decrement"></paper-icon-button>
+				</div>
+			</paper-card>
+		</template>
 	</template>
 
 	<script>
 		Polymer({
 			properties: {
-				count: Number
+				Counters: Array
 			},
 			ready: function() {
-				this.count = 1;
+				that = this;
+				ajax({
+					url: '/counters',
+					method: 'GET',
+					success: function(response) {
+						that.Counters = response;
+					}
+				});
 			},
 			increment: function() {
 				this.count++;
