@@ -7,9 +7,9 @@ import (
 )
 
 type counter struct {
-	count int
-	name  string
-	desc  string
+	Count int
+	Name  string
+	Desc  string
 }
 
 var counters = []counter{}
@@ -21,17 +21,17 @@ func getHandler(rw http.ResponseWriter, req *http.Request) {
 
 func addHandler(rw http.ResponseWriter, req *http.Request) {
 	c := counter{}
-	c.name = req.FormValue("name")
-	c.desc = req.FormValue("desc")
-	c.count, _ = strconv.Atoi(req.FormValue("count"))
+	c.Name = req.FormValue("name")
+	c.Desc = req.FormValue("desc")
+	c.Count, _ = strconv.Atoi(req.FormValue("count"))
 	counters = append(counters, c)
 }
 
 func incHandler(rw http.ResponseWriter, req *http.Request) {
 	name := req.FormValue("name")
 	for _, c := range counters {
-		if c.name == name {
-			c.count++
+		if c.Name == name {
+			c.Count++
 			break
 		}
 	}
@@ -40,8 +40,8 @@ func incHandler(rw http.ResponseWriter, req *http.Request) {
 func decHandler(rw http.ResponseWriter, req *http.Request) {
 	name := req.FormValue("name")
 	for _, c := range counters {
-		if c.name == name {
-			c.count--
+		if c.Name == name {
+			c.Count--
 			break
 		}
 	}
@@ -56,6 +56,9 @@ func staticFilesHandler(rw http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
+
+	counters = append(counters, counter{Name: "mohan", Desc: "desc"})
+
 	http.HandleFunc("/", indexHandler)
 	http.HandleFunc("/static/", staticFilesHandler)
 	http.HandleFunc("/get", getHandler)
