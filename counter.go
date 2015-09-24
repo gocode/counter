@@ -21,9 +21,9 @@ func getHandler(rw http.ResponseWriter, req *http.Request) {
 
 func addHandler(rw http.ResponseWriter, req *http.Request) {
 	c := counter{}
-	c.Name = req.FormValue("name")
-	c.Desc = req.FormValue("desc")
-	c.Count, _ = strconv.Atoi(req.FormValue("count"))
+	c.Name = req.FormValue("Name")
+	c.Desc = req.FormValue("Desc")
+	c.Count, _ = strconv.Atoi(req.FormValue("Count"))
 	counters = append(counters, c)
 }
 
@@ -48,7 +48,7 @@ func decHandler(rw http.ResponseWriter, req *http.Request) {
 }
 
 func indexHandler(rw http.ResponseWriter, req *http.Request) {
-	http.ServeFile(rw, req, "static/counter.html")
+	http.ServeFile(rw, req, "static/index.html")
 }
 
 func staticFilesHandler(rw http.ResponseWriter, req *http.Request) {
@@ -57,7 +57,9 @@ func staticFilesHandler(rw http.ResponseWriter, req *http.Request) {
 
 func main() {
 
+	//test data
 	counters = append(counters, counter{Name: "mohan", Desc: "desc"})
+	counters = append(counters, counter{Name: "ram", Desc: "csed"})
 
 	http.HandleFunc("/", indexHandler)
 	http.HandleFunc("/static/", staticFilesHandler)

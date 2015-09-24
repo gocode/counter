@@ -1,0 +1,95 @@
+<link rel="import" href="/static/bower_components/polymer/polymer.html">
+<link rel="import" href="/static/bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="/static/bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="/static/bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="/static/bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="/static/bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
+<link rel="import" href="/static/bower_components/paper-input/paper-input.html">
+<link rel="import" href="/static/bower_components/paper-button/paper-button.html">
+
+<link rel="import" href="/static/go-counter.html">
+
+<script src="/static/ajax.js"></script>
+
+<dom-module id="counter-list">
+	<style>
+		paper-fab {
+			position: absolute;
+			right: 50px;
+			top: 35px;
+			background-color: green;
+		}
+		paper-dialog {
+			height: 465px;
+			width: 500px;
+		}
+		paper-button {
+			background: #3f51b5;
+			color: #fff;
+		}
+	</style>
+
+	<template>
+		<paper-toolbar>
+		</paper-toolbar>
+		<paper-fab icon="add" on-click="openAddForm"></paper-fab>
+		
+		<template is="dom-repeat" items="[[Counters]]">
+			<go-counter name="[[item.Name]]" desc="[[item.Desc]]" count="[[item.Count]]"></go-counter>
+		</template>
+
+		<paper-dialog id="dialog">
+			<h2>Add Counter</h2>
+			<paper-dialog-scrollable>
+				<paper-input label="Name:" autofocus value="{{name}}"></paper-input></br>
+				<paper-input label="Description:" autofocus value="{{desc}}"></paper-input></br>
+				<paper-input label="Initial count:" autofocus value="{{count}}"></paper-input></br>
+			</paper-dialog-scrollable>
+			<div class="buttons">
+				<paper-button dialog-dismiss>Cancel</paper-button>
+				<paper-button dialog-confirm autofocus on-click="addCounter">OK</paper-button>
+			</div>
+		</paper-dialog>	
+	</template>
+
+	<script>
+		Polymer({
+			properties: {
+				Counters: Array,
+				name: String,
+				desc: String,
+				count: Number
+			},
+			ready: function() {
+				that = this;
+				ajax({
+					url: '/get',
+					method: 'GET',
+					success: function(response) {
+						that.Counters = JSON.parse(response);
+					}
+				});
+			},
+			openAddForm: function() {
+				dialog.open();
+			},
+			addCounter: function() {
+				var data = {
+					Name: this.name,
+					Desc: this.desc,
+					Count: this.count
+				};
+				this.Counters[this.Counters.length] = data;
+				ajax({
+					url: '/add',
+					method: 'POST',
+					data: data,
+					success: function(){},
+					error: function() {
+						alert('unable to save value in server');
+					}
+				});
+			}
+		});
+	</script>
+</dom-module>

@@ -19,41 +19,52 @@
 	</style>
 
 	<template>
-		<template is="dom-repeat" items="[[Counters]]">
-			<paper-card heading="[[item.Name]]">
-				<div class="card-content">
-					<div>[[item.Desc]]</div>
-					<div class="counter">[[item.Count]]</div>
-				</div>
-				<div class="card-actions">
-					<paper-icon-button data-name="[[item.Name]]" icon="add" on-click="increment"></paper-icon-button>
-					<paper-icon-button icon="remove" on-click="decrement"></paper-icon-button>
-				</div>
-			</paper-card>
-		</template>
+		<paper-card heading="[[name]]">
+			<div class="card-content">
+				<div>[[desc]]</div>
+				<div class="counter">[[count]]</div>
+			</div>
+			<div class="card-actions">
+				<paper-icon-button icon="add" on-click="increment"></paper-icon-button>
+				<paper-icon-button icon="remove" on-click="decrement"></paper-icon-button>
+			</div>
+		</paper-card>
 	</template>
 
 	<script>
 		Polymer({
 			properties: {
-				Counters: Array
+				name: String,
+				desc: String,
+				count: Number
 			},
-			ready: function() {
-				that = this;
+			increment: function(e) {
+				this.count++;
 				ajax({
-					url: '/get',
-					method: 'GET',
-					success: function(response) {
-						that.Counters = JSON.parse(response);
+					url: '/inc',
+					method: 'POST',
+					data: {
+						name: this.name
+					},
+					success: function(){},
+					error: function() {
+						alert('unable to save value in server');
 					}
 				});
 			},
-			increment: function(e) {
-				console.log(e.target.getAttribute('data-name'));
-				this.count++;
-			},
 			decrement: function() {
 				this.count--;
+				ajax({
+					url: '/dec',
+					method: 'POST',
+					data: {
+						name: this.name
+					},
+					success: function(){},
+					error: function() {
+						alert('unable to save value in server');
+					}
+				});
 			}
 		});
 	</script>
