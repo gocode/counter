@@ -31,6 +31,7 @@
 
 	<template>
 		<paper-toolbar>
+			<div class="title">Counter</div>
 		</paper-toolbar>
 		<paper-fab icon="add" on-click="openAddForm"></paper-fab>
 		
@@ -79,12 +80,11 @@
 					Desc: this.desc,
 					Count: this.count
 				};
-				this.Counters[this.Counters.length] = data;
+				this.push('Counters', data);
 				ajax({
 					url: '/add',
 					method: 'POST',
 					data: data,
-					success: function(){},
 					error: function() {
 						alert('unable to save value in server');
 					}

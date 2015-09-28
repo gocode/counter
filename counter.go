@@ -47,6 +47,16 @@ func decHandler(rw http.ResponseWriter, req *http.Request) {
 	}
 }
 
+func removeHandler(rw http.ResponseWriter, req *http.Request) {
+	name := req.FormValue("name")
+	for i, c := range counters {
+		if c.Name == name {
+			counters = append(counters[:i], counters[i+1:]...)
+			break
+		}
+	}
+}
+
 func indexHandler(rw http.ResponseWriter, req *http.Request) {
 	http.ServeFile(rw, req, "static/index.html")
 }
@@ -56,15 +66,11 @@ func staticFilesHandler(rw http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
-
-	//test data
-	counters = append(counters, counter{Name: "mohan", Desc: "desc"})
-	counters = append(counters, counter{Name: "ram", Desc: "csed"})
-
 	http.HandleFunc("/", indexHandler)
 	http.HandleFunc("/static/", staticFilesHandler)
 	http.HandleFunc("/get", getHandler)
 	http.HandleFunc("/add", addHandler)
+	http.HandleFunc("/remove", removeHandler)
 	http.HandleFunc("/inc", incHandler)
 	http.HandleFunc("/dec", decHandler)
 	http.ListenAndServe(":9090", nil)

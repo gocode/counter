@@ -27,6 +27,7 @@
 			<div class="card-actions">
 				<paper-icon-button icon="add" on-click="increment"></paper-icon-button>
 				<paper-icon-button icon="remove" on-click="decrement"></paper-icon-button>
+				<paper-icon-button icon="delete" on-click="delete"></paper-icon-button>
 			</div>
 		</paper-card>
 	</template>
@@ -46,7 +47,6 @@
 					data: {
 						name: this.name
 					},
-					success: function(){},
 					error: function() {
 						alert('unable to save value in server');
 					}
@@ -60,11 +60,23 @@
 					data: {
 						name: this.name
 					},
-					success: function(){},
 					error: function() {
 						alert('unable to save value in server');
 					}
 				});
+			},
+			delete: function() {
+				ajax({
+					url: '/remove',
+					method: 'POST',
+					data: {
+						name: this.name
+					},
+					error: function() {
+						alert('unable to delete counter');
+					}
+				});
+				document.location.reload(true);
 			}
 		});
 	</script>
