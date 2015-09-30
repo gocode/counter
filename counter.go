@@ -14,6 +14,16 @@ type counter struct {
 
 var counters = []counter{}
 
+func init() {
+	http.HandleFunc("/", indexHandler)
+	http.HandleFunc("/static/", staticFilesHandler)
+	http.HandleFunc("/get", getHandler)
+	http.HandleFunc("/add", addHandler)
+	http.HandleFunc("/remove", removeHandler)
+	http.HandleFunc("/inc", incHandler)
+	http.HandleFunc("/dec", decHandler)
+}
+
 func getHandler(rw http.ResponseWriter, req *http.Request) {
 	e := json.NewEncoder(rw)
 	e.Encode(counters)
@@ -58,20 +68,10 @@ func removeHandler(rw http.ResponseWriter, req *http.Request) {
 }
 
 func indexHandler(rw http.ResponseWriter, req *http.Request) {
+
 	http.ServeFile(rw, req, "static/index.html")
 }
 
 func staticFilesHandler(rw http.ResponseWriter, req *http.Request) {
 	http.ServeFile(rw, req, req.URL.Path[1:])
-}
-
-func main() {
-	http.HandleFunc("/", indexHandler)
-	http.HandleFunc("/static/", staticFilesHandler)
-	http.HandleFunc("/get", getHandler)
-	http.HandleFunc("/add", addHandler)
-	http.HandleFunc("/remove", removeHandler)
-	http.HandleFunc("/inc", incHandler)
-	http.HandleFunc("/dec", decHandler)
-	http.ListenAndServe(":9090", nil)
 }
