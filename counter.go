@@ -12,7 +12,7 @@ type counter struct {
 	Desc  string
 }
 
-var counters = []counter{}
+var counters = []*counter{}
 
 func init() {
 	http.HandleFunc("/", indexHandler)
@@ -30,7 +30,7 @@ func getHandler(rw http.ResponseWriter, req *http.Request) {
 }
 
 func addHandler(rw http.ResponseWriter, req *http.Request) {
-	c := counter{}
+	c := &counter{}
 	c.Name = req.FormValue("Name")
 	c.Desc = req.FormValue("Desc")
 	c.Count, _ = strconv.Atoi(req.FormValue("Count"))
@@ -74,4 +74,8 @@ func indexHandler(rw http.ResponseWriter, req *http.Request) {
 
 func staticFilesHandler(rw http.ResponseWriter, req *http.Request) {
 	http.ServeFile(rw, req, req.URL.Path[1:])
+}
+
+func main() {
+	http.ListenAndServe(":9090", nil)
 }
